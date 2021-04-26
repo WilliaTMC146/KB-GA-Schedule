@@ -1,8 +1,8 @@
 import numpy as np
 import random as rd
 
-hari = 2700
-jr = 2800 # jumlah rapat
+hari = 365
+jr = 450 # jumlah rapat
 durasi = []
 
 for i in range(0, jr): # isi durasi
@@ -16,7 +16,8 @@ class Schedule:
         self.total_durasi_rapat = 0
         self.value = 0
         self.libur = 0
-
+        self.max_ = 0
+        self.min_ = 1
         for i in range(1, hari):
             self.durra.append(0)
 
@@ -31,6 +32,7 @@ class Schedule:
                 continue
 
     def fitness_function(self):
+        self.libur = 0
         sum_total_rapat = 0
         self.total_durasi_rapat = (np.sum(self.durra) * 2)
         for i in range(1, hari):
@@ -80,6 +82,24 @@ class Schedule:
                 return true
         return false
 
+    def get_minmax_rapat(self):
+        temp = 0
+        for i in range (0,jr):
+            temp = self.rapat.count(i)
+            if(temp > self.max_):
+                self.max_ = temp
+            if(temp < self.min_ and temp != 0):
+                self.min_ = temp
+        
+        #print("Rapat Terbanyak dalam 1 hari: ", self.max_)
+        #print("Rapat Paling Sedikit dalam 1 hari: ", self.min_)
+
+    def count_libur(self):
+        libur = 0
+        for i in range(0, hari):
+            if self.rapat.count(i) == 0:
+                libur +=1
+
     def set_rapat(self, arra):
         for i in range(0, jr):
             self.rapat[i] = arra[i]
@@ -108,7 +128,33 @@ class Schedule:
     def print_durra(self):
         print(self.durra)
 
+    def print_libur(self):
+        print(self.libur)
+
+    def print_hasil(self):
+        #print(self.rapat)
+        print("Max Rapat: ", self.max_, "  Min Rapat: ", self.min_, "  Libur: ", self.libur)
+        print("Fitness: ", self.value, "\n")
+
 #- Functions -#
+
+def quickSort(array, left, right):
+    if left >= right:
+        return array
+    pivot = array[left].get_fitness()
+    i = left + 1
+    for j in range(left + 1, right):
+        if array[j].get_fitness() > pivot:
+            temp = array[j]
+            array[j] = array[i]
+            array[i] = temp
+            i += 1
+    temp = array[left]
+    array[left] = array[i - 1]
+    array[i - 1] = temp
+    array = quickSort(array, left, i - 1)
+    array = quickSort(array, i, right)
+    return array
 
 def sorting(array):
     for i in range(len(array)):
@@ -117,7 +163,7 @@ def sorting(array):
                 array[j], array[j + 1] = array[j + 1], array[j]
 
 #- Main -#
-pop_value = 10
+pop_value = 50
 population = [] # parent
 new_gen = [] # generasi baru
 
@@ -131,6 +177,7 @@ for i in range (0, pop_value):
     #print("fitness " + str(i + 1) + " :", end=" ")
     #population[i].print_fitness()
 
+#population = quickSort(population, 0, len(population))
 sorting(population)
 
 for gen in range(0,10):
@@ -174,31 +221,35 @@ for gen in range(0,10):
         #new_gen[i].print_rapat()
         #new_gen[i].print_fitness()
 
+    #new_gen = quickSort(new_gen, 0, len(new_gen))
     sorting(new_gen)
 
     #print("\n== Penggabungan ==")
-    crover = 0
     for i in range(0, pop_value):
         mutation_chance = rd.randrange(1, 5)
-        if new_gen[i].get_fitness() > population[pop_value - crover - 1].get_fitness():
-            population[pop_value - crover - 1] = new_gen[i]
-            crover += 1
+        if new_gen[i].get_fitness() > population[pop_value - 1].get_fitness():
+            population[pop_value - 1] = new_gen[i]
+            population = quickSort(population, 0, len(population))
         if mutation_chance == 2:
             #print("population " + str(i))
             #print(population[i].get_rapat())
             population[i].single_mutasi()
             population[i].fitness_function()
+        
 
     #print("\n== New Gen ==")
     #for i in range (0,pop_value):
         #population[i].print_rapat()
         #population[i].print_fitness()
 
+    #population = quickSort(population, 0, len(population))
     sorting(population)
 
     #print("\n\n== Fitness Function Sorted New Gen ==")
     for i in range (0, pop_value):
-        print("fitness " + str(i + 1) + " :", end=" ")
-        population[i].print_fitness()
+        population[i].get_minmax_rapat()
+        print("Parent " + str(i + 1) + " :", end=" ")
+        population[i].count_libur()
+        population[i].print_hasil()
 
     print("\n\n")
