@@ -2,7 +2,7 @@ import numpy as np
 import random as rd
 
 hari = 365
-jr = 450 # jumlah rapat
+jr = 300 # jumlah rapat
 durasi = []
 
 for i in range(0, jr): # isi durasi
@@ -18,7 +18,6 @@ class Schedule:
         self.libur = 0
         self.max_ = 0
         self.min_ = 1
-        self.ratarata_rapat = 0
         for i in range(1, hari):
             self.durra.append(0)
 
@@ -120,9 +119,6 @@ class Schedule:
     def print_rapat(self):
         print(self.rapat)
 
-    def get_average_rapat(self):
-        return np.avreage(self.rapat)
-
     def get_fitness(self):
         return self.value
 
@@ -137,8 +133,7 @@ class Schedule:
 
     def print_hasil(self):
         #print(self.rapat)
-        print("Max Rapat: ", self.max_, "  Min Rapat: ", self.min_, "  Rata-Rata Rapat per hari: ", "  Libur: ", self.libur)
-        print("Rata-rata Rapat: ", np.average(self.rapat))
+        print("Max Rapat: ", self.max_, "  Min Rapat: ", self.min_, "  Libur: ", self.libur)
         print("Fitness: ", self.value, "\n")
 
 #- Functions -#
@@ -168,7 +163,7 @@ def sorting(array):
                 array[j], array[j + 1] = array[j + 1], array[j]
 
 #- Main -#
-pop_value = 5
+pop_value = 50
 population = [] # parent
 new_gen = [] # generasi baru
 
@@ -229,8 +224,8 @@ for gen in range(0,10):
     #new_gen = quickSort(new_gen, 0, len(new_gen))
     sorting(new_gen)
 
-    #print("\n== Penggabungan ==")
-    for i in range(0, pop_value):
+    #MUTASI
+    for i in range(1, pop_value):
         mutation_chance = rd.randrange(1, 5)
         if new_gen[i].get_fitness() > population[pop_value - 1].get_fitness():
             population[pop_value - 1] = new_gen[i]
@@ -251,7 +246,7 @@ for gen in range(0,10):
     sorting(population)
 
     #print("\n\n== Fitness Function Sorted New Gen ==")
-    for i in range (0, pop_value):
+    for i in range (0, 5):
         population[i].get_minmax_rapat()
         print("Parent " + str(i + 1) + " :", end=" ")
         population[i].count_libur()
