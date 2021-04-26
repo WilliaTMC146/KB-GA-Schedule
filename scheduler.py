@@ -11,13 +11,14 @@ for i in range(0, jr): # isi durasi
 #- Class -#
 class Schedule:
     def __init__(self):
-        self.rapat = []
+        self.rapat = [] # hari rapat
         self.durra = [] # durasi rapat per hari
         self.total_durasi_rapat = 0
         self.value = 0
         self.libur = 0
         self.max_ = 0
         self.min_ = 1
+        self.ratarata_rapat = 0
         for i in range(1, hari):
             self.durra.append(0)
 
@@ -119,6 +120,9 @@ class Schedule:
     def print_rapat(self):
         print(self.rapat)
 
+    def get_average_rapat(self):
+        return np.avreage(self.rapat)
+
     def get_fitness(self):
         return self.value
 
@@ -133,7 +137,8 @@ class Schedule:
 
     def print_hasil(self):
         #print(self.rapat)
-        print("Max Rapat: ", self.max_, "  Min Rapat: ", self.min_, "  Libur: ", self.libur)
+        print("Max Rapat: ", self.max_, "  Min Rapat: ", self.min_, "  Rata-Rata Rapat per hari: ", "  Libur: ", self.libur)
+        print("Rata-rata Rapat: ", np.average(self.rapat))
         print("Fitness: ", self.value, "\n")
 
 #- Functions -#
@@ -163,7 +168,7 @@ def sorting(array):
                 array[j], array[j + 1] = array[j + 1], array[j]
 
 #- Main -#
-pop_value = 50
+pop_value = 5
 population = [] # parent
 new_gen = [] # generasi baru
 
@@ -252,4 +257,10 @@ for gen in range(0,10):
         population[i].count_libur()
         population[i].print_hasil()
 
-    print("\n\n")
+    # population[0].get_minmax_rapat()
+    # population[0].count_libur()
+    # population[0].average_rapat()
+    # population[0].print_hasil()
+
+    print("\n")
+    
