@@ -40,22 +40,6 @@ class Schedule:
                 self.libur += 1
             sum_total_rapat += 2**self.rapat.count(i)
         self.value = self.total_durasi_rapat + sum_total_rapat + self.libur
-        # print(self.total_durasi_rapat)
-        # print(sum_total_rapat)
-        # print(self.libur)
-        # print(self.value)
-
-    def get_crossover(self):
-        result = 0
-        start = 2
-        end = 5
-        i = 0
-        array = []
-
-        for i in range(start, end):
-            array.append(self.rapat[i])
-        
-        return array
 
     def single_mutasi(self):
         x = rd.randrange(1, hari)
@@ -65,9 +49,6 @@ class Schedule:
         self.durra[x - 1] = durasi[y]
         self.durra[self.rapat[y] - 1] -= durasi[y]
         self.rapat[y] = x
-        #print("Index     :", y)
-        #print("Nilai     :", x)
-        # return self.rapat
 
     def check_limit_rapat(self):
         for i in range (0, jr):
@@ -90,9 +71,6 @@ class Schedule:
                 self.max_ = temp
             if(temp < self.min_ and temp != 0):
                 self.min_ = temp
-        
-        #print("Rapat Terbanyak dalam 1 hari: ", self.max_)
-        #print("Rapat Paling Sedikit dalam 1 hari: ", self.min_)
 
     def count_libur(self):
         libur = 0
@@ -172,10 +150,7 @@ for i in range (0, pop_value):
 
 #print("== Fitness Function ==")
 for i in range (0, pop_value):
-    #population[i].print_rapat()
     population[i].fitness_function()
-    #print("fitness " + str(i + 1) + " :", end=" ")
-    #population[i].print_fitness()
 
 #population = quickSort(population, 0, len(population))
 sorting(population)
@@ -184,14 +159,7 @@ for gen in range(0,10):
     
     print("Generasi: ", gen + 1)
 
-    # print("\n\n== Fitness Function Sorted ==")
-    # for i in range (0, pop_value):
-    #     population[i].print_rapat()
-    #     print("fitness " + str(i + 1) + " :", end=" ")
-    #     population[i].print_fitness()
-
     #crossover
-    #print("\n\n== CrossOver ==")
     for i in range (0, pop_value):
         new_gen.append(Schedule())
 
@@ -209,18 +177,6 @@ for gen in range(0,10):
                 else:
                     new_gen[k].set_rapat_index(i, population[p2].get_data_rapat(i))
 
-            #print("new gen for", end=" ")
-            #new_gen[k].check_limit_rapat()
-            #new_gen[k].fitness_function()
-            #new_gen[k].print_fitness()
-            # new_gen[k].print_rapat()
-            # new_gen[k].print_fitness()
-
-    #print("\n\n== After CrossOver ==")
-    #for i in range (0,pop_value):
-        #new_gen[i].print_rapat()
-        #new_gen[i].print_fitness()
-
     #new_gen = quickSort(new_gen, 0, len(new_gen))
     sorting(new_gen)
 
@@ -231,16 +187,8 @@ for gen in range(0,10):
             population[pop_value - 1] = new_gen[i]
             population = quickSort(population, 0, len(population))
         if mutation_chance == 2:
-            #print("population " + str(i))
-            #print(population[i].get_rapat())
             population[i].single_mutasi()
             population[i].fitness_function()
-        
-
-    #print("\n== New Gen ==")
-    #for i in range (0,pop_value):
-        #population[i].print_rapat()
-        #population[i].print_fitness()
 
     #population = quickSort(population, 0, len(population))
     sorting(population)
@@ -251,11 +199,6 @@ for gen in range(0,10):
         print("Parent " + str(i + 1) + " :", end=" ")
         population[i].count_libur()
         population[i].print_hasil()
-
-    # population[0].get_minmax_rapat()
-    # population[0].count_libur()
-    # population[0].average_rapat()
-    # population[0].print_hasil()
 
     print("\n")
     
